@@ -1,0 +1,91 @@
+<div class="mt-5">
+  <div class="d-flex justify-content-between">
+    <p class="mat-display-2">Edytuj kurs</p>
+    <button mat-fab matTooltip="Powrót do listy" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+  <mat-card>
+    <mat-card-content *ngIf="course">
+      <form [formGroup]="editCourseForm" (ngSubmit)="onSubmit()" class="d-flex justify-content-center">
+        <div class="d-flex flex-column justify-content-center w-50">
+          <mat-form-field appearance="standard">
+            <mat-label>Nazwa</mat-label>
+            <input matInput type="text" formControlName="name" />
+          </mat-form-field>
+
+          <mat-form-field appearance="standard">
+            <mat-label>Opis</mat-label>
+            <textarea matInput type="text" formControlName="description"></textarea>
+          </mat-form-field>
+
+          <mat-divider inset="true" class="divider-vertical-margin"></mat-divider>
+
+          <p class="mat-body-2">Tematy kursu</p>
+
+          <mat-list>
+            <mat-list-item *ngFor="let topic of course.topics; index as i">
+              <p class="mat-subheader">{{ topic.number }}. {{ topic.name }}</p>
+              <span class="flex-grow-1"></span>
+              <button mat-icon-button type="button" color="warn" (click)="removeTopic(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-list-item>
+          </mat-list>
+
+          <p class="mat-subheader" *ngIf="!course.topics || course.topics.length === 0">Brak tematów</p>
+
+          <mat-divider inset="true" class="divider-vertical-margin"></mat-divider>
+
+          <p class="mat-body-1">Dodaj nowy temat</p>
+
+          <div class="d-flex w-100">
+            <div style="width: 70%">
+              <mat-form-field hintLabel="Maksymalnie 40 znaków" appearance="fill" class="w-100">
+                <mat-label>Nazwa tematu</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  maxlength="40"
+                  [(ngModel)]="newTopic.name"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+                <mat-hint [align]="'end'"> {{ newTopic.name?.length ?? 0 }}/40 </mat-hint>
+              </mat-form-field>
+            </div>
+            <span class="flex-grow-1"></span>
+            <div style="width: 20%">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Numer tematu</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  min="0"
+                  [(ngModel)]="newTopic.number"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <button
+            mat-stroked-button
+            type="button"
+            [disabled]="(newTopic.name?.length ?? 0) === 0"
+            class="align-self-center mt-4"
+            style="width: 30%"
+            (click)="addTopic()"
+          >
+            Dodaj
+          </button>
+
+          <mat-divider inset="true" class="divider-vertical-margin"></mat-divider>
+
+          <button mat-stroked-button type="submit" [disabled]="!editCourseForm.valid" class="w-50 align-self-center">
+            Zapisz
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
